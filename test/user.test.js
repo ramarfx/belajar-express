@@ -90,7 +90,7 @@ describe('POST /api/users/login', () => {
         password: 'password'
       })
 
-      logger.info(result.body)
+    logger.info(result.body)
 
     expect(result.status).toBe(200)
     expect(result.body.data.token).toBeDefined()
@@ -105,7 +105,7 @@ describe('POST /api/users/login', () => {
         password: ''
       })
 
-      logger.info(result.body)
+    logger.info(result.body)
 
     expect(result.status).toBe(400)
     expect(result.body.errors).toBeDefined()
@@ -119,7 +119,7 @@ describe('POST /api/users/login', () => {
         password: 'salah'
       })
 
-      logger.info(result.body)
+    logger.info(result.body)
 
     expect(result.status).toBe(401)
     expect(result.body.errors).toBeDefined()
@@ -133,9 +133,38 @@ describe('POST /api/users/login', () => {
         password: 'salah'
       })
 
-      logger.info(result.body)
+    logger.info(result.body)
 
     expect(result.status).toBe(401)
     expect(result.body.errors).toBeDefined()
   })
+})
+
+describe('GET /api/users/current', () => {
+  beforeEach(async () => {
+    await createTestUser();
+  })
+
+  afterEach(async () => {
+    await removeTestUser();
+  })
+
+  it('shoud can get current user', async () => {
+    const result = await supertest(web)
+    .get('/api/users/current')
+    .set('Authorization', 'test')
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.username).toBe('test')
+    expect(result.body.data.name).toBe('test')
+  });
+
+  it('shoud reject if token is invalid', async () => {
+    const result = await supertest(web)
+    .get('/api/users/current')
+    .set('Authorization', 'salah')
+
+    expect(result.status).toBe(401)
+    expect(result.body.errors).toBeDefined()
+  });
 })
