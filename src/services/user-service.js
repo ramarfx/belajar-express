@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 import {v4 as uuid} from "uuid"
 
 const register = async (request) => {
-  const user = validate(registerUserValidation, request);
+  const user =  (registerUserValidation, request);
 
   const countUser = await prismaClient.user.count({
     where: {
@@ -137,7 +137,7 @@ const logout = async (username) => {
   return prismaClient.user.update({
     where: {
       username: username
-    },
+    },  
     data: {
       token: null
     },
